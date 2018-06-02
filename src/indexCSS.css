@@ -1,0 +1,16 @@
+img{
+	border-radius: 4px;
+}
+
+@font-face {
+    font-family:"GJG";
+    src: url("../Font/GenJyuuGothic-Monospace-Bold.ttf") /* TTF file for CSS3 browsers */
+}
+
+body{
+	font-family: "GJG";
+}
+
+text{
+	font-size:20px;
+}

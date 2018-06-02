@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html style="background-color:#FFE4B5;">
+<head>
+	<title>過冬(For The Winter)</title>
+</head>
+<link rel="stylesheet" type="text/css" href="./Src/indexCSS.css">
+<body>
+	<header><img src="./img/risu.png" width="60"><h1 style="display: inline;">過冬(For The Winter)</h1></header>
+	<div id="resourceLine">
+		<text style="font-size: 25px;">回合</text><text id="roundText">1</text>
+		<img src="./img/nut.png" width="50" style="margin-left: 20px;"/>
+		<img src="./img/multiply.png" width="15"/>
+		<text id="ownNutText" style="font-size: 45px;">2</text>
+		<img src="./img/nutPlus.png" width="50" style="margin-left: 20px;"/>
+		<img src="./img/multiply.png" width="15"/>
+		<text id="ownNutPlusText" style="font-size: 45px;">0</text>
+		<text>(蒐集10顆獲勝！)</text>		
+		<img id="rollingDice" src="./img/dice1.png" width="80" onclick="rollTheDice()" border="3px" style="border-color:#FFE4B5;"></img>
+		<img src="./img/rabbitDownThin.png" height="150" id="rabbitGuide"></img>
+		<img src="./img/guide2.png" width="120" id="hanaGuide" ></img>
+	</div>	
+	<img src="./img/risu.png" width="40"><h2 style="display: inline;">玩家行動</h2><br>
+	<svg id="playerActionArea" width="1220" height="300" style="display: inline;">
+		<rect id="playerActionAreaBG" width="1220" height="290" fill="None" stroke="#000000" stroke-width="5px"/>		
+		<g onclick="selectLocation(1)">
+			<rect x="20" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px" />
+			<image x="20" y="20" width="180" height="250" href="" id="cardInLocation1"/>
+			<image href="./img/dice1.png" x="70" y="100" width="80"></image>
+		</g>
+		<g onclick="selectLocation(2)">
+			<rect x="220" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px"/>
+			<image x="220" y="20" width="180" height="250" href="" id="cardInLocation2"/>
+			<image href="./img/dice2.png" x="270" y="100" width="80"></image>
+		</g>
+			<g onclick="selectLocation(3)">
+			<rect x="420" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px"/>
+			<image x="420" y="20" width="180" height="250" href="" id="cardInLocation3"/>
+			<image href="./img/dice3.png" x="470" y="100" width="80"></image>
+		</g>
+			<g onclick="selectLocation(4)">
+			<rect x="620" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px"/>
+			<image x="620" y="20" width="180" height="250" href="" id="cardInLocation4"/>
+			<image href="./img/dice4.png" x="670" y="100" width="80"></image>
+		</g>
+		<g onclick="selectLocation(5)">
+			<rect x="820" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px" />
+			<image x="820" y="20" width="180" height="250" href="" id="cardInLocation5"/>
+			<image href="./img/dice5.png" x="870" y="100" width="80"></image>
+		</g>
+		<g onclick="selectLocation(6)">
+			<rect x="1020" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px" />
+			<image x="1020" y="20" width="180" height="250" href="" id="cardInLocation6"/>
+			<image href="./img/dice6.png" x="1070" y="100" width="80"></image>
+		</g>
+	</svg>
+	<br><img src="./img/tree.png" width="40"><h2 style="display: inline;">購買行動區域</h2>
+	<text>牌庫剩餘：</text><text id="remainCardsText">0</text><text>張</text><br>
+	<svg id="marketArea" width="1420" height="300" style="display: inline;">
+		<rect id="marketAreaBG" width="1420" height="290" fill="None" stroke="#000000" stroke-width="5px"/>		
+		<g onclick="selectMarketLocation(1)">
+			<image href="./img/dice1.png" x="70" y="220" width="40"></image>
+			<rect x="20" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px" />
+			<image x="20" y="20" width="180" height="250" href="" id="marketLocation1"/>			
+		</g>
+		<g onclick="selectMarketLocation(2)">
+			<image href="./img/dice2.png" x="270" y="220" width="40"></image>
+			<rect x="220" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px"/>
+			<image x="220" y="20" width="180" height="250" href="" id="marketLocation2"/>
+		</g>
+		<g onclick="selectMarketLocation(3)">
+			<image href="./img/dice3.png" x="470" y="220" width="40"></image>
+			<rect x="420" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px"/>
+			<image x="420" y="20" width="180" height="250" href="" id="marketLocation3"/>			
+		</g>
+		<g onclick="selectMarketLocation(4)">
+			<image href="./img/dice4.png" x="670" y="220" width="40"></image>
+			<rect x="620" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px"/>
+			<image x="620" y="20" width="180" height="250" href="" id="marketLocation4"/>			
+		</g>
+		<g onclick="selectMarketLocation(5)">
+			<image href="./img/dice5.png" x="870" y="220" width="40"></image>
+			<rect x="820" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px" />
+			<image x="820" y="20" width="180" height="250" href="" id="marketLocation5"/>			
+		</g>
+		<g onclick="selectMarketLocation(6)">
+			<image href="./img/dice6.png" x="1070" y="220" width="40"></image>
+			<rect x="1020" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px" />
+			<image x="1020" y="20" width="180" height="250" href="" id="marketLocation6"/>			
+		</g>
+		<rect x="1220" y="20" width="160" height="250" fill="None" stroke="#000000" stroke-width="8px"/>
+		<text x="265" y="57" style="fill:#AA0000; font-size:35px;">+1</text>
+		<text x="465" y="57" style="fill:#AA0000; font-size:35px;">+2</text>
+		<text x="665" y="57" style="fill:#AA0000; font-size:35px;">+3</text>
+		<text x="865" y="57" style="fill:#AA0000; font-size:35px;">+4</text>
+		<text x="1065" y="57" style="fill:#AA0000; font-size:35px;">+5</text>
+		<image onclick="selectMarketLocation('pass')" href="./img/cardback.png" x="1220" y="20" width="160" style="stroke-width:5px;"></image>
+	</svg>
+</body>
+<script src="./Lib/jquery-3.2.1.min.js"></script>
+<script src="./Lib/d3.v3.min.js"></script>
+<script type="text/javascript" src="./src/main.js"></script>
+</html>

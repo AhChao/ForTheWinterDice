@@ -4,7 +4,7 @@ img{
 
 @font-face {
     font-family:"GJG";
-    src: url("../Font/GenJyuuGothic-Monospace-Bold.ttf") /* TTF file for CSS3 browsers */
+    src: url("../font/GenJyuuGothic-Monospace-Bold.ttf") /* TTF file for CSS3 browsers */
 }
 
 body{

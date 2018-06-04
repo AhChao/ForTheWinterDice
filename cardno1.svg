@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="レイヤー_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="180" height="250">
+	<rect width="180" height="250" stroke-width="8px" stroke="#000000" fill="#deb887"/>
+	<text x="20" y="40" style="font-size:36px">0</text>
+	<image href="./nut.png" width="60" x="30" y="150"/>
+	<text x="90" y="200" style="font-size:36px">+ 3</text>
+</svg>

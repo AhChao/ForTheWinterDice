@@ -1,11 +1,8 @@
 var diceRoll = 0;
 var stopRoll = true;
 var timeoutSet;
-var cardNumbers = [0,0,3,2,3,0,2,2,2,2,1,1,1,1,1];//5號先移掉，4號2號各多一張
-//本來的 [0,0,2,2,2,2,2,2,2,2,1,1,1,1,1]
-//easy mode [0,0,4,3,4,0,3,3,3,3,2,2,2,2,2];
-//medium mode [0,0,4,2,3,0,2,3,2,3,1,1,2,2,1];
-var cardCostNuts = [0,0,2,3,3,4,5,6,7,8,8,9,9,10,10];
+var cardNumbers = [0,0,4,3,3,2,2,2,2,2,2,2,2,2,2];//30張
+var cardCostNuts = [0,0,2,3,3,3,3,5,5,5,7,7,7,7,10];
 var ownCards = [0,0,0,0,0,0];
 var needSelectLoaction = false;
 var needRollDice = false;
@@ -19,6 +16,7 @@ var round = 1;
 var actoinUsed = [false,false,false,false,false,false];
 var toastTimeout;
 var winGoalOfNutPlus = 7;
+var costPlus = [0,0,1,2,3,3];
 
 function resetGame()
 {
@@ -26,8 +24,8 @@ function resetGame()
 	d3.select("#loserView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
 	resetPlayerActionAreaUI();
 	//para Init
-	cardNumbers = [0,0,4,2,3,2,0,3,2,3,1,1,2,2,1];
-	cardCostNuts = [0,0,2,3,3,4,5,6,7,8,8,9,9,10,10];
+	cardNumbers = [0,0,4,3,3,2,2,2,2,2,2,2,2,2,2];
+	cardCostNuts = [0,0,2,3,3,3,3,5,5,5,7,7,7,7,10];
 	ownCards = [0,0,0,0,0,0];
 	stopRoll = true;
 	diceRoll = 0;
@@ -50,6 +48,7 @@ function resetGame()
 	updateResourceUI();
 	updateMarketUI();
 	updateRemainCards();
+	d3.select("#roundText").text(round);
 }
 
 function endTheGame(win)
@@ -126,7 +125,7 @@ function selectLocation(loaction)
 				{
 					d3.select("#cardInLocation"+loaction).attr(
 					{
-						"href":"./img/cardno"+nowPlaceCard+".png",
+						"href":"./img/cardno"+nowPlaceCard+".svg",
 					});
 					ownCards[loaction-1] = nowPlaceCard;
 					endSelection();
@@ -137,7 +136,7 @@ function selectLocation(loaction)
 		{
 			d3.select("#cardInLocation"+loaction).attr(
 			{
-				"href":"./img/cardno"+nowPlaceCard+".png",
+				"href":"./img/cardno"+nowPlaceCard+".svg",
 			});
 			ownCards[loaction-1] = nowPlaceCard;
 			endSelection();
@@ -220,7 +219,7 @@ function updateMarketUI()
 	{
 		if(marketCards[i]!=0)
 		{
-			d3.select("#marketLocation"+(i*1+1)).attr("href","./img/cardno"+marketCards[i]+".png");
+			d3.select("#marketLocation"+(i*1+1)).attr("href","./img/cardno"+marketCards[i]+".svg");
 		}
 		else
 		{
@@ -280,12 +279,7 @@ function updateResourceUI()
 
 function doPlayerAction(actionNo)// actionNo=1~6
 {	
-	actionNo = actionNo-1;
-	while(ownCards[actionNo]==0)//陣列只有0~5，減一做特別處理
-	{
-		if(actionNo==5) actionNo=0;
-		else actionNo++;
-	}
+	actionNo = actionNo-1;//陣列只有0~5，減一做特別處理	
 
 	d3.select("#doingActionStroke").attr("x",actionNo*200+10).attr("y",10).attr("style","");
 
@@ -299,11 +293,18 @@ function doPlayerAction(actionNo)// actionNo=1~6
 	console.log("b",actoinUsed);
 	actoinUsed[actionNo] = true;
 	console.log(actoinUsed);
-	
-	if(ownCards[actionNo]==1)
+
+	if(ownCards[actionNo]==0)
 	{
 		playerNut+=2;
-		toastMsg("獲得2顆松果！目前共有"+playerNut+"顆松果。");
+		toastMsg("無行動的位置！獲得2顆松果！目前共有"+playerNut+"顆松果。");
+		updateResourceUI();
+		buyActionSet();
+	}	
+	if(ownCards[actionNo]==1)
+	{
+		playerNut+=3;
+		toastMsg("獲得3顆松果！目前共有"+playerNut+"顆松果。");
 		updateResourceUI();
 		buyActionSet();
 	}
@@ -324,8 +325,17 @@ function doPlayerAction(actionNo)// actionNo=1~6
 				playerNut-=5;
 				toastMsg("獲得1顆保存松果！");
 			}
-			else toastMsg("松果不足！");
-		} 	
+			else
+			{
+				playerNut+=2;
+				toastMsg("數量不夠保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+			}
+		}
+		else
+		{
+			playerNut+=2;
+			toastMsg("取消保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+		}
 		updateResourceUI();
 		buyActionSet();
 	}
@@ -345,7 +355,7 @@ function doPlayerAction(actionNo)// actionNo=1~6
 	}
 	else if(ownCards[actionNo]==6)
 	{
-		toastMsg("獲得2顆松果與1次額外購買！");
+		toastMsg("獲得2顆松果與無視順位加價購買！");
 		playerNut+=2;
 		updateResourceUI();
 		buyActionSet(2);
@@ -357,7 +367,7 @@ function doPlayerAction(actionNo)// actionNo=1~6
 		updateResourceUI();
 		rollDiceSet(false);
 	}	
-	else if(ownCards[actionNo]==8||ownCards[actionNo]==9)
+	else if(ownCards[actionNo]==8)
 	{
 		if (confirm("用4顆一般松果執行保存松果的動作？")) 
 		{
@@ -367,10 +377,26 @@ function doPlayerAction(actionNo)// actionNo=1~6
 				playerNut-=4;
 				toastMsg("獲得1顆保存松果！");
 			}
-			else toastMsg("松果不足！");
+			else
+			{
+				playerNut+=2;
+				toastMsg("數量不夠保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+			}
+		}
+		else
+		{
+			playerNut+=2;
+			toastMsg("取消保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
 		}
 		updateResourceUI();
 		buyActionSet();
+	}
+	else if(ownCards[actionNo]==9)
+	{
+		toastMsg("獲得4顆松果與無視順位加價購買！");
+		playerNut+=4;
+		updateResourceUI();
+		buyActionSet(2);
 	}
 	else if(ownCards[actionNo]==10)
 	{
@@ -381,26 +407,26 @@ function doPlayerAction(actionNo)// actionNo=1~6
 	}
 	else if(ownCards[actionNo]==11)
 	{
-		if (confirm("用5顆一般松果執行保存松果的動作？")) 
+		if (confirm("把7顆一般松果做成2顆保存松果？")) 
 		{
-			if(playerNut>=5)
+			if(playerNut>=7)
 			{
 				playerNutPlus++;
-				playerNut-=5;
-				toastMsg("獲得1顆保存松果！");
-				if (confirm("再一次用5顆一般松果執行保存松果的動作？")) 
-				{
-					if(playerNut>=5)
-					{
-						playerNutPlus++;
-						playerNut-=5;
-						toastMsg("共獲得2顆保存松果！");
-					}
-					else toastMsg("松果不足！");
-				}
+				playerNutPlus++;
+				playerNut-=7;
+				toastMsg("獲得2顆保存松果！");
 			}
-			else toastMsg("松果不足！");			
-		}		
+			else
+			{
+				playerNut+=2;
+				toastMsg("數量不夠保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+			}	
+		}
+		else
+		{
+			playerNut+=2;
+			toastMsg("取消保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+		}	
 		updateResourceUI();
 		buyActionSet();
 	}
@@ -421,7 +447,16 @@ function doPlayerAction(actionNo)// actionNo=1~6
 				playerNut-=3;
 				toastMsg("獲得1顆保存松果！");
 			}
-			else toastMsg("松果不足！");	
+			else
+			{
+				playerNut+=2;
+				toastMsg("數量不夠保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+			}
+		}
+		else
+		{
+			playerNut+=2;
+			toastMsg("取消保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
 		}
 		updateResourceUI();
 		buyActionSet();
@@ -435,18 +470,36 @@ function doPlayerAction(actionNo)// actionNo=1~6
 				playerNutPlus++;
 				playerNut-=4;
 				toastMsg("獲得1顆保存松果！");
-				if (confirm("再一次用4顆一般松果執行保存松果的動作？")) 
-				{
-					if(playerNut>=4)
-					{
-						playerNutPlus++;
-						playerNut-=4;
-						toastMsg("共獲得2顆保存松果！");
-					}
-					else toastMsg("松果不足！");
-				}
 			}
-			else toastMsg("松果不足！");
+			else
+			{
+				playerNut+=2;
+				toastMsg("數量不夠保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+			}
+		}
+		else
+		{
+			playerNut+=2;
+			toastMsg("取消保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+		}
+		if (confirm("(第二次)用4顆一般松果執行保存松果的動作？")) 
+		{
+			if(playerNut>=4)
+			{
+				playerNutPlus++;
+				playerNut-=4;
+				toastMsg("獲得1顆保存松果！");
+			}
+			else
+			{
+				playerNut+=2;
+				toastMsg("數量不夠保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
+			}
+		}
+		else
+		{
+			playerNut+=2;
+			toastMsg("取消保存！改為獲得2顆松果！目前共有"+playerNut+"顆松果。");
 		}
 		updateResourceUI();
 		buyActionSet();
@@ -480,9 +533,10 @@ function selectMarketLocation(loactionNo)
 		else
 		{			
 			var cost = cardCostNuts[marketCards[loactionNo-1]];
-			cost = cost*1 + loactionNo*1 -1;
+			if(needBuyAction==2) cost = cost*1;
+			else cost = cost*1 + costPlus[loactionNo-1];
 			if(playerNut>=cost)
-			{
+			{				
 				playerNut = playerNut - cost;
 				selectLocationSet(marketCards[loactionNo-1]);
 				marketCards[loactionNo-1]=0;
@@ -519,7 +573,7 @@ function leftCardAbandoned()
 
 function endMarketPhase()
 {
-	needBuyAction--;
+	needBuyAction=0;
 	d3.select("#hanaGuide").attr("src","./img/guide2.png");
 	if(needBuyAction<=0)
 	{

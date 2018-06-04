@@ -6,7 +6,7 @@
 </head>
 <link rel="stylesheet" type="text/css" href="./src/indexCSS.css">
 <body>
-	<header><img src="./img/risu.png" width="60"><h1 style="display: inline;">過冬(For The Winter)</h1></header>
+	<header><img src="./img/risu.png" width="60"><h1 style="display: inline;">過冬(For The Winter)</h1><button onclick="resetGame()" style="border-radius: 5px;font-size: 20px;">重置遊戲</button></header>
 	<div id="loserView" style="z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px;">
 		<svg id="loserViewSVG" width="500" height="500">
 		<rect width="500" height="500" fill="#888888" rx="10" ry="10" stroke="#000000" stroke-width="10px" ></rect>
@@ -54,7 +54,7 @@
 		<rect id="doingActionStroke" x="10" y="10" width="200" height="270" fill="None" stroke="#AA0000" stroke-width="5px" style="display: none;"/>
 		<g onclick="selectLocation(1)">
 			<rect x="20" y="20" width="180" height="250" fill="#FFE4B5" stroke="#000000" stroke-width="3px" />
-			<image x="20" y="20" width="180" height="250" href="" id="cardInLocation1"/>
+			<image x="20" y="20" width="180" height="250" href="" id="cardInLocation1"></image>
 			<image href="./img/dice1.png" x="70" y="100" width="80"></image>
 		</g>
 		<g onclick="selectLocation(2)">
@@ -118,11 +118,11 @@
 			<image x="1020" y="20" width="180" height="250" href="" id="marketLocation6"/>			
 		</g>
 		<rect x="1220" y="20" width="160" height="250" fill="None" stroke="#000000" stroke-width="8px"/>
-		<text x="265" y="57" style="fill:#AA0000; font-size:35px;">+1</text>
-		<text x="465" y="57" style="fill:#AA0000; font-size:35px;">+2</text>
-		<text x="665" y="57" style="fill:#AA0000; font-size:35px;">+3</text>
-		<text x="865" y="57" style="fill:#AA0000; font-size:35px;">+4</text>
-		<text x="1065" y="57" style="fill:#AA0000; font-size:35px;">+5</text>
+		<!--<text x="265" y="57" style="fill:#AA0000; font-size:35px;">+0</text>-->
+		<text x="470" y="60" style="fill:#AA0000; font-size:35px;">+1</text>
+		<text x="670" y="60" style="fill:#AA0000; font-size:35px;">+2</text>
+		<text x="870" y="60" style="fill:#AA0000; font-size:35px;">+3</text>
+		<text x="1070" y="60" style="fill:#AA0000; font-size:35px;">+3</text>
 		<image onclick="selectMarketLocation('pass')" href="./img/cardback.png" x="1220" y="20" width="160" style="stroke-width:5px;"></image>
 	</svg>
 	<div id="snackbar">Some text some message..</div>

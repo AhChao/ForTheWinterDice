@@ -17,6 +17,64 @@ var actoinUsed = [false,false,false,false,false,false];
 var toastTimeout;
 var winGoalOfNutPlus = 7;
 
+function resetGame()
+{
+	d3.select("#winnerView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
+	d3.select("#loserView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
+	resetPlayerActionAreaUI();
+	//para Init
+	cardNumbers = [0,0,2,2,2,2,2,2,2,2,1,1,1,1,1];
+	cardCostNuts = [0,0,2,3,3,4,5,6,7,8,8,9,9,10,10];
+	ownCards = [0,0,0,0,0,0];
+	stopRoll = true;
+	diceRoll = 0;
+	needSelectLoaction = false;
+	needRollDice = false;
+	needBuyAction = 0;
+	nowPlaceCard = 0;
+	marketCards = [0,0,0,0,0,0];
+	playerNut = 0;
+	playerNutPlus = 0;
+	round = 1;
+	actoinUsed = [false,false,false,false,false,false];
+	winGoalOfNutPlus = 7;
+	//Init ok
+
+	playerNut = 2;	
+	updateRemainCards();
+	selectLocationSet(1);
+	setMarketCard();
+	updateResourceUI();
+	updateMarketUI();
+	updateRemainCards();
+}
+
+function endTheGame(win)
+{
+	needSelectLoaction = false;
+	needRollDice = false;
+	needBuyAction = 0;
+	if(win)
+	{
+		d3.select("#winnerCostRoundText").text("花了"+round+"回合完成！");
+		d3.select("#winnerView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px;");
+	}
+	else
+	{
+		d3.select("#loserView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px;");
+	}
+}
+
+function resetPlayerActionAreaUI()
+{
+	d3.select("#cardInLocation1").attr("href","");
+	d3.select("#cardInLocation2").attr("href","");
+	d3.select("#cardInLocation3").attr("href","");
+	d3.select("#cardInLocation4").attr("href","");
+	d3.select("#cardInLocation5").attr("href","");
+	d3.select("#cardInLocation6").attr("href","");
+}
+
 function rollTheDice()
 {
 	if(needRollDice)
@@ -120,17 +178,6 @@ function rollDiceSet(roundReset)
 	d3.select("#rollingDice").attr("style","border-color:#AA0000;");	
 }
 
-function setUP()
-{
-	playerNut = 2;	
-	updateRemainCards();
-	selectLocationSet(1);
-	setMarketCard();
-	updateResourceUI();
-	updateMarketUI();
-	updateRemainCards();
-}
-
 function updateRemainCards()
 {
 	var cards = 0;
@@ -146,6 +193,7 @@ function setMarketCard()//放牌入市場，補滿
 	if(d3.select("#remainCardsText").text()=="0")
 	{
 		toastMsg("沒有足夠的牌可以補滿市場了，你失敗了！");
+		endTheGame(false);
 		return;
 	}
 	for(var i in marketCards)
@@ -220,7 +268,11 @@ function updateResourceUI()
 {
 	d3.select("#ownNutText").text(playerNut);
 	d3.select("#ownNutPlusText").text(playerNutPlus);
-	if(playerNut >= winGoalOfNutPlus) toastMsg("存到足夠過冬的松果了！恭喜你獲勝！");
+	if(playerNutPlus >= winGoalOfNutPlus)
+	{
+		toastMsg("存到足夠過冬的松果了！恭喜你獲勝！");
+		endTheGame(true);
+	}
 }
 
 function doPlayerAction(actionNo)// actionNo=1~6
@@ -486,4 +538,5 @@ function toastMsg(msg)
     x.innerHTML = msg;
     toastTimeout = setTimeout(function(){ x.className = x.className.replace("show", "");}, 2000);
 }
-setUP();
+
+resetGame();

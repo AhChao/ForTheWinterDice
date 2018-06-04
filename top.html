@@ -7,6 +7,32 @@
 <link rel="stylesheet" type="text/css" href="./src/indexCSS.css">
 <body>
 	<header><img src="./img/risu.png" width="60"><h1 style="display: inline;">過冬(For The Winter)</h1></header>
+	<div id="loserView" style="z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px;">
+		<svg id="loserViewSVG" width="500" height="500">
+		<rect width="500" height="500" fill="#888888" rx="10" ry="10" stroke="#000000" stroke-width="10px" ></rect>
+		<text x="150" y="80" style="font-size: 80px; stroke-width: 8;stroke: #000000;">失敗！</text>
+		<text x="150" y="80" style="font-size: 80px; stroke-width: 1.5;stroke: #FFFFFF;">失敗！</text>		
+		<image x="50" y="100" href="./img/risuNOtoC.png" width="400"/>
+		<text x="70" y="400" style="font-size: 60px; stroke-width: 1.5;stroke: #FFFFFF;">過不了冬啦！</text>
+		<g onclick="resetGame()">
+			<rect x="140" y="420" width="200" height="60" fill="#4f4f4f" stroke="#000000" stroke-width="5px" rx="3" ry="3"/>
+			<text x="180" y="460" style="font-size: 30px; fill:#FFFFFF;">再試一次</text>
+		</g>
+		</svg>
+	</div>
+	<div id="winnerView" style="z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display: None;">
+		<svg id="winnerViewSVG" width="500" height="500">
+		<rect width="500" height="500" fill="#d9b300" rx="10" ry="10" stroke="#000000" stroke-width="10px"></rect>
+		<text x="150" y="80" style="font-size: 80px; stroke-width: 1.5;stroke: #FFFFFF;">成功！</text>		
+		<image x="50" y="100" href="./img/risuNC.png" width="300"/>
+		<text id="winnerCostRoundText" x="30" y="340" style="font-size: 60px; stroke-width: 1.5;stroke: #FFFFFF;">花了0回合完成！</text>
+		<text x="120" y="400" style="font-size: 60px; stroke-width: 1.5;stroke: #FFFFFF;">小事一樁！</text>
+		<g onclick="resetGame()">
+			<rect x="140" y="420" width="200" height="60" fill="#4f4f4f" stroke="#000000" stroke-width="5px" rx="3" ry="3"/>
+			<text x="180" y="460" style="font-size: 30px; fill:#FFFFFF; stroke-width: 1.5;stroke: #000000;">再來一輪</text>
+		</g>
+		</svg>
+	</div>
 	<div id="resourceLine">
 		<text style="font-size: 30px;">第</text><text id="roundText" style="font-size: 40px;"> 1 </text><text style="font-size: 30px;">回合</text>
 		<text style="margin-left: 50px;">一般松果</text>

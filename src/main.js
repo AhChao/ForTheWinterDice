@@ -26,7 +26,7 @@ function resetGame()
 	d3.select("#loserView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
 	resetPlayerActionAreaUI();
 	//para Init
-	cardNumbers = [0,0,4,2,3,0,2,3,2,3,1,1,2,2,1];
+	cardNumbers = [0,0,4,2,3,2,0,3,2,3,1,1,2,2,1];
 	cardCostNuts = [0,0,2,3,3,4,5,6,7,8,8,9,9,10,10];
 	ownCards = [0,0,0,0,0,0];
 	stopRoll = true;

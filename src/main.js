@@ -1,7 +1,10 @@
 var diceRoll = 0;
 var stopRoll = true;
 var timeoutSet;
-var cardNumbers = [0,0,2,2,2,2,2,2,2,2,1,1,1,1,1];
+var cardNumbers = [0,0,3,2,3,0,2,2,2,2,1,1,1,1,1];//5號先移掉，4號2號各多一張
+//本來的 [0,0,2,2,2,2,2,2,2,2,1,1,1,1,1]
+//easy mode [0,0,4,3,4,0,3,3,3,3,2,2,2,2,2];
+//medium mode [0,0,4,2,3,0,2,3,2,3,1,1,2,2,1];
 var cardCostNuts = [0,0,2,3,3,4,5,6,7,8,8,9,9,10,10];
 var ownCards = [0,0,0,0,0,0];
 var needSelectLoaction = false;
@@ -23,7 +26,7 @@ function resetGame()
 	d3.select("#loserView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
 	resetPlayerActionAreaUI();
 	//para Init
-	cardNumbers = [0,0,2,2,2,2,2,2,2,2,1,1,1,1,1];
+	cardNumbers = [0,0,4,2,3,0,2,3,2,3,1,1,2,2,1];
 	cardCostNuts = [0,0,2,3,3,4,5,6,7,8,8,9,9,10,10];
 	ownCards = [0,0,0,0,0,0];
 	stopRoll = true;

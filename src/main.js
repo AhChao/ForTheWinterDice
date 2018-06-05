@@ -17,9 +17,14 @@ var actoinUsed = [false,false,false,false,false,false];
 var toastTimeout;
 var winGoalOfNutPlus = 7;
 var costPlus = [0,0,1,2,3,3];
+var recTextOn = false;//測試文字
+var buyCardInfo = [0,0];
+var roundBeginNut = [0,0];
 
 function resetGame()
 {
+	if(recTextOn) document.getElementById("gameRecordText").innerHTML= "遊戲紀錄";
+	else document.getElementById("gameRecordText").innerHTML= "";
 	d3.select("#winnerView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
 	d3.select("#loserView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
 	resetPlayerActionAreaUI();
@@ -42,13 +47,13 @@ function resetGame()
 	//Init ok
 
 	playerNut = 2;	
-	updateRemainCards();
-	selectLocationSet(1);
+	updateRemainCards();	
 	setMarketCard();
 	updateResourceUI();
 	updateMarketUI();
 	updateRemainCards();
 	d3.select("#roundText").text(round);
+	selectLocationSet(1);
 }
 
 function endTheGame(win)
@@ -92,7 +97,7 @@ function changeDiceFace()
 {
 	if(stopRoll)
 	{
-		clearTimeout(timeoutSet);
+		clearTimeout(timeoutSet);	
 		doPlayerAction(faceOfDice);
 		return;
 	}
@@ -127,7 +132,7 @@ function selectLocation(loaction)
 					{
 						"href":"./img/cardno"+nowPlaceCard+".svg",
 					});
-					ownCards[loaction-1] = nowPlaceCard;
+					ownCards[loaction-1] = nowPlaceCard;					
 					endSelection();
 				}
 			}
@@ -149,9 +154,11 @@ function endSelection()
 	d3.select("#playerActionAreaBG").attr("stroke","#000000");
 	needSelectLoaction = false;
 	nowPlaceCard = 0;
-	rollDiceSet(true);
 	d3.select("#rabbitGuide").attr("src","./img/rabbitThin.png");
-	d3.select("#hanaGuide").attr("src","./img/guide1.png");
+	d3.select("#hanaGuide").attr("src","./img/guide1.png");	
+	roundBeginNut[0]= playerNut;
+	roundBeginNut[1]= playerNutPlus;
+	rollDiceSet(true);
 	return;
 }
 
@@ -290,9 +297,7 @@ function doPlayerAction(actionNo)// actionNo=1~6
 		buyActionSet();
 		return;
 	}
-	console.log("b",actoinUsed);
 	actoinUsed[actionNo] = true;
-	console.log(actoinUsed);
 
 	if(ownCards[actionNo]==0)
 	{
@@ -523,6 +528,8 @@ function selectMarketLocation(loactionNo)
 	{
 		if(loactionNo=="pass")
 		{
+			buyCardInfo[0]=0;
+			buyCardInfo[1]=0;
 			toastMsg("跳過購買階段！");
 			needBuyAction = 1;
 			endMarketPhase();
@@ -537,11 +544,13 @@ function selectMarketLocation(loactionNo)
 			else cost = cost*1 + costPlus[loactionNo-1];
 			if(playerNut>=cost)
 			{				
+				buyCardInfo[0] = cost;
+				buyCardInfo[1] = marketCards[loactionNo-1];	
 				playerNut = playerNut - cost;
 				selectLocationSet(marketCards[loactionNo-1]);
 				marketCards[loactionNo-1]=0;
 				updateResourceUI();	
-				endMarketPhase();							
+				endMarketPhase();					
 				toastMsg("花費"+cost+"顆松果購買第"+loactionNo+"張行動，請選擇放置位置！");	
 			}
 			else
@@ -577,8 +586,41 @@ function endMarketPhase()
 	d3.select("#hanaGuide").attr("src","./img/guide2.png");
 	if(needBuyAction<=0)
 	{
+		if(recTextOn)
+		{
+			document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+			"<br>"+"Round"+round+
+			"：回合開始持有松果:["+roundBeginNut[0]+", "+roundBeginNut[1]+"]"+	
+			" | 持有牌編號：["+ownCards+"]"+
+			" | 執行行動：[";
+			var usedActionList = [];
+			for(var i in actoinUsed)
+			{
+				if(actoinUsed[i])
+				{
+					usedActionList.push(i);
+				}
+			}
+			for(var i in usedActionList)
+			{
+				if(usedActionList.length>1)
+				{
+					document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+					"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動，";
+				}
+				else
+				{
+					document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+					"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動";
+				} 
+			}
+			document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+			"] | 花費"+buyCardInfo[0]+"松果購買"+buyCardInfo[1]+"號行動"+
+			" | 回合結束持有松果:["+playerNut+", "+playerNutPlus+"]";
+		}
+		
 		round++;
-		d3.select("#roundText").text(round);
+		d3.select("#roundText").text(round);		
 		d3.select("#marketAreaBG").attr("stroke","#000000");
 		leftCardAbandoned();
 		reloadMarket();
@@ -594,6 +636,11 @@ function toastMsg(msg)
     x.className = "show";
     x.innerHTML = msg;
     toastTimeout = setTimeout(function(){ x.className = x.className.replace("show", "");}, 2000);
+}
+
+function setGameRec()
+{
+	recTextOn = document.getElementById("gameRecordCheckBox").checked;
 }
 
 resetGame();

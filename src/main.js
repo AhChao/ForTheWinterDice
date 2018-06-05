@@ -23,8 +23,7 @@ var roundBeginNut = [0,0];
 
 function resetGame()
 {
-	if(recTextOn) document.getElementById("gameRecordText").innerHTML= "遊戲紀錄";
-	else document.getElementById("gameRecordText").innerHTML= "";
+	document.getElementById("gameRecordText").innerHTML= "遊戲紀錄";
 	d3.select("#winnerView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
 	d3.select("#loserView").attr("style","z-index: 10;position: absolute; top: 50%;left: 50%;margin: -250px 0 0 -400px; display:None;");
 	resetPlayerActionAreaUI();
@@ -61,6 +60,36 @@ function endTheGame(win)
 	needSelectLoaction = false;
 	needRollDice = false;
 	needBuyAction = 0;
+	document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+	"<br>"+"Round"+round+
+	"：回合開始持有松果:["+roundBeginNut[0]+", "+roundBeginNut[1]+"]"+	
+	" | 持有牌編號：["+ownCards+"]"+
+	" | 執行行動：[";
+	var usedActionList = [];
+	for(var i in actoinUsed)
+	{
+		if(actoinUsed[i])
+		{
+			usedActionList.push(i);
+		}
+	}
+	for(var i in usedActionList)
+	{
+		if(usedActionList.length>1)
+		{
+			document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+			"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動，";
+		}
+		else
+		{
+			document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+			"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動";
+		} 
+	}
+	document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+	"] | 花費"+buyCardInfo[0]+"松果購買"+buyCardInfo[1]+"號行動"+
+	" | 回合結束持有松果:["+playerNut+", "+playerNutPlus+"]";
+	
 	if(win)
 	{
 		d3.select("#winnerCostRoundText").text("花了"+round+"回合完成！");
@@ -585,39 +614,37 @@ function endMarketPhase()
 	needBuyAction=0;
 	d3.select("#hanaGuide").attr("src","./img/guide2.png");
 	if(needBuyAction<=0)
-	{
-		if(recTextOn)
+	{		
+		document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+		"<br>"+"Round"+round+
+		"：回合開始持有松果:["+roundBeginNut[0]+", "+roundBeginNut[1]+"]"+	
+		" | 持有牌編號：["+ownCards+"]"+
+		" | 執行行動：[";
+		var usedActionList = [];
+		for(var i in actoinUsed)
 		{
-			document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
-			"<br>"+"Round"+round+
-			"：回合開始持有松果:["+roundBeginNut[0]+", "+roundBeginNut[1]+"]"+	
-			" | 持有牌編號：["+ownCards+"]"+
-			" | 執行行動：[";
-			var usedActionList = [];
-			for(var i in actoinUsed)
+			if(actoinUsed[i])
 			{
-				if(actoinUsed[i])
-				{
-					usedActionList.push(i);
-				}
+				usedActionList.push(i);
 			}
-			for(var i in usedActionList)
-			{
-				if(usedActionList.length>1)
-				{
-					document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
-					"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動，";
-				}
-				else
-				{
-					document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
-					"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動";
-				} 
-			}
-			document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
-			"] | 花費"+buyCardInfo[0]+"松果購買"+buyCardInfo[1]+"號行動"+
-			" | 回合結束持有松果:["+playerNut+", "+playerNutPlus+"]";
 		}
+		for(var i in usedActionList)
+		{
+			if(usedActionList.length>1)
+			{
+				document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+				"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動，";
+			}
+			else
+			{
+				document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+				"骰出"+(usedActionList[i]*1+1)+" 執行"+ownCards[usedActionList[i]]+"號行動";
+			} 
+		}
+		document.getElementById("gameRecordText").innerHTML= document.getElementById("gameRecordText").innerHTML+
+		"] | 花費"+buyCardInfo[0]+"松果購買"+buyCardInfo[1]+"號行動"+
+		" | 回合結束持有松果:["+playerNut+", "+playerNutPlus+"]";
+		
 		
 		round++;
 		d3.select("#roundText").text(round);		
@@ -641,6 +668,14 @@ function toastMsg(msg)
 function setGameRec()
 {
 	recTextOn = document.getElementById("gameRecordCheckBox").checked;
+	if(recTextOn)
+	{
+		d3.select("#gameRecordText").attr("style","font-size: 20px;")
+	}
+	else
+	{
+		d3.select("#gameRecordText").attr("style","font-size: 20px;display: None;")
+	}
 }
 
 resetGame();
